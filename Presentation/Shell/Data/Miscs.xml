@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<MenuItem Id="0"
+		  Name="Miscs"
+		  Title="Root"
+		  Level="0" >
+	<MenuItem Id="5"
+			  Name="OrgChartTry"
+			  Title="OrgChart"
+			  Level="2"
+			  IsCacheable="False"
+			  IconKind="OrganicOutline"
+			  ItemType="Item"
+			  ModuleName="MiscsModule"
+		      ViewName="Aksl.Modules.Miscs.OrgChart.Views.OrgChartView,Aksl.Modules.Miscs"  >
+	</MenuItem>
+</MenuItem>
+
+

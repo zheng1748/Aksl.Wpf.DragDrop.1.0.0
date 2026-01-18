@@ -8,7 +8,6 @@ using Prism.Mvvm;
 
 using Aksl.Toolkit.Controls;
 using Aksl.Infrastructure;
-using Aksl.Infrastructure.Events;
 
 namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
 {
@@ -20,11 +19,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
         #endregion
 
         #region Constructors
-        //public MenuItemViewModel(MenuItem menuItem)
-        //{
-        //    _menuItem = menuItem;
-        //}
-
         public MenuItemViewModel(IEventAggregator eventAggregator, int groupIndex, int index, MenuItem menuItem)
         {
             _eventAggregator = eventAggregator;
@@ -36,7 +30,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
 
         #region Properties
         public MenuItem MenuItem => _menuItem;
-        public string WorkspaceViewEventName { get; set; }
         public int GroupIndex { get; }
         public int Index { get; }
         public string Name => _menuItem.Name;
@@ -50,28 +43,7 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
         public bool IsSelected
         {
             get => _isSelected;
-            set
-            {
-                if (SetProperty<bool>(ref _isSelected, value))
-                {
-                    //var isSelectedOnLeaf = IsLeaf && (!HasNavigationName || (HasNavigationName && !IsNextNavigation));
-                    //var isSelectedOnNotLeaf = !IsLeaf && !IsNexOnNotLeaf;
-
-                    ////if (IsLeaf && _isSelected)
-                    //if (isSelectedOnLeaf && _isSelected)
-                    //{
-                    //    //_eventAggregator.GetEvent<OnBuildHamburgerMenuNavigationSideBarWorkspaceViewEvent>().Publish(new() { CurrentMenuItem = _menuItem });
-                    //    var buildHWorkspaceViewEvent = _eventAggregator.GetEvent(WorkspaceViewEventName) as OnBuildWorkspaceViewEventbase;
-                    //    buildHWorkspaceViewEvent.Publish(new() { CurrentMenuItem = _menuItem });
-                    //}
-
-                    //if (isSelectedOnNotLeaf && _isSelected)
-                    //{
-                    //    var buildHWorkspaceViewEvent = _eventAggregator.GetEvent(WorkspaceViewEventName) as OnBuildWorkspaceViewEventbase;
-                    //    buildHWorkspaceViewEvent.Publish(new() { CurrentMenuItem = _menuItem });
-                    //}
-                }
-            }
+            set => SetProperty<bool>(ref _isSelected, value);
         }
 
         public PackIconKind IconKind
@@ -104,10 +76,7 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
         #region Mouse Left Button Down Event
         public void ExecuteDrag(object sender, MouseButtonEventArgs e)
         {
-            if (IsLeaf)
-            {
-                System.Windows.DragDrop.DoDragDrop(dragSource: (System.Windows.DependencyObject)sender, data: _menuItem, allowedEffects: System.Windows.DragDropEffects.Copy);
-            }
+            System.Windows.DragDrop.DoDragDrop(dragSource: (System.Windows.DependencyObject)sender, data: _menuItem, allowedEffects: System.Windows.DragDropEffects.Copy);
         }
         #endregion
     }

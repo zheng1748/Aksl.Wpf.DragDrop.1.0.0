@@ -916,20 +916,6 @@
                 <Grid x:Name="ContentRoot"
                       Grid.ColumnSpan="2">
                     <Border>
-                        <!--<ContentControl x:Name="hamburgerMenuNavigationSideBarWorkspaceRegion"
-                                        HorizontalAlignment="Stretch"
-                                        VerticalAlignment="Stretch"
-                                        Margin="0,0,0,0"
-                                        prism:RegionManager.RegionName="{Binding Path=WorkspaceRegionName,Mode=OneWay}">
-                            <ContentControl.RenderTransform>
-                                <TransformGroup>
-                                    <ScaleTransform />
-                                    <SkewTransform />
-                                    <RotateTransform />
-                                    <TranslateTransform />
-                                </TransformGroup>
-                            </ContentControl.RenderTransform>
-                        </ContentControl>-->
                         <views:DragDropView />
                     </Border>
                     <Rectangle x:Name="LightDismissLayer"

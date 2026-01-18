@@ -208,19 +208,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
                 }
             }
 
-            SetWorkspaceViewEventName();
-
-            void SetWorkspaceViewEventName()
-            {
-                foreach (var gm in GroupedMenus)
-                {
-                    foreach (var mi in gm.MenuContent.MenuItems)
-                    {
-                        mi.WorkspaceViewEventName = this.WorkspaceViewEventName;
-                    }
-                }
-            }
-
             IsLoading = false;
         }
         #endregion
@@ -230,56 +217,23 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
         {
             List<MenuItem> leafMenuItems = new();
 
-            //if (HasSubMenu(menuItem))
-            //{
-            //    foreach (var smi in menuItem.SubMenus)
-            //    {
-            //        await RecursiveSubMenuItem(smi);
-            //    }
-            //}
-            //else if (HasNavigationName(menuItem) && IsLeaf(menuItem))
-            //{
-            //    var root = await _menuService.GetMenuAsync(menuItem.NavigationName);
-            //    foreach (var smi in root.SubMenus)
-            //    {
-            //        await RecursiveSubMenuItem(smi);
-            //    }
-            //}
-            //else
-            //{
-            //    await RecursiveSubMenuItem(menuItem);
-            //}
-
             await RecursiveSubMenuItem(menuItem);
 
             async Task RecursiveSubMenuItem(MenuItem currentMenuItem)
             {
-                //if (!AnyEqualsMenuItems(leafMenuItems, currentMenuItem) && IsLeaf(currentMenuItem) && HasTitle(currentMenuItem))
                 var isAddOnLeaf = IsLeaf(currentMenuItem) && (!HasNavigationName(currentMenuItem) || (HasNavigationName(currentMenuItem) && !IsNextNavigation(currentMenuItem)));
                 var isAddOnNotLeaf = !IsLeaf(currentMenuItem) && !IsNexOnNotLeaf(currentMenuItem);
-                //  if (!AnyEqualsMenuItems(leafMenuItems, currentMenuItem) && IsLeaf(currentMenuItem) && HasTitle(currentMenuItem) && (!HasNavigationName(currentMenuItem) || (HasNavigationName(currentMenuItem) && !IsNextNavigation(currentMenuItem))))
+            
                 if (!AnyEqualsMenuItems(leafMenuItems, currentMenuItem) && HasTitle(currentMenuItem) && (isAddOnLeaf || isAddOnNotLeaf))
                 {
                     leafMenuItems.Add(currentMenuItem);
                 }
 
-                //if (!AnyEqualsMenuItem(leafMenuItems, currentMenuItem) && IsLeaf(currentMenuItem) && !HasNavigationName(currentMenuItem) && HasTitle(currentMenuItem))
-                //{
-                //    leafMenuItems.Add(currentMenuItem);
-                //}
-
-                //if (HasNavigationName(currentMenuItem) && IsLeaf(currentMenuItem))
-                //{
-                //    currentMenuItem = await _menuService.GetMenuAsync(currentMenuItem.NavigationName);
-                //}
-
-              //if (HasNavigationName(currentMenuItem) && IsNextNavigation(currentMenuItem) && IsLeaf(currentMenuItem))
                if (HasNavigationName(currentMenuItem) && IsNextNavigation(currentMenuItem))
                 {
                     currentMenuItem = await _menuService.GetMenuAsync(currentMenuItem.NavigationName);
                 }
 
-                //if (HasSubMenu(currentMenuItem))
                 if (HasSubMenu(currentMenuItem) && IsNexOnNotLeaf(currentMenuItem))
                 {
                     foreach (var smi in currentMenuItem.SubMenus)
@@ -324,35 +278,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
                            (!string.IsNullOrEmpty(otherNameOrTitle) && otherNameOrTitle.Equals(nameOrTitle, StringComparison.InvariantCultureIgnoreCase));
 
             return isEquals;
-        }
-
-        internal void GetLeafMenuItems(MenuItem currentMenuItem, IList<MenuItem> leafMenuItems)
-        {
-            if (Isleaf(currentMenuItem) && HasTitle(currentMenuItem))
-            {
-                leafMenuItems.Add(currentMenuItem);
-            }
-
-            if (currentMenuItem.SubMenus.Any())
-            {
-                RecursiveSubMenuItem(currentMenuItem);
-            }
-
-            void RecursiveSubMenuItem(MenuItem parentMenuItem)
-            {
-                foreach (var smi in parentMenuItem.SubMenus)
-                {
-                    if (!leafMenuItems.Contains(smi) && Isleaf(smi) && HasTitle(smi))
-                    {
-                        leafMenuItems.Add(smi);
-                    }
-                    RecursiveSubMenuItem(smi);
-                }
-            }
-
-            bool Isleaf(MenuItem mi) => mi.SubMenus.Count <= 0;
-
-            bool HasTitle(MenuItem mi) => !string.IsNullOrEmpty(mi.Title);
         }
         #endregion
     }

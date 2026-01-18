@@ -1,27 +1,22 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
+using Prism;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Unity;
+using System;
+using System.Linq;
 
 using Aksl.Infrastructure;
-using Aksl.Toolkit.Controls;
-using Prism.Unity;
-using Prism;
 using Aksl.Toolkit.UI;
-using System.Xml.Linq;
-using System.Linq;
 
 namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
 {
     public class DragDropItemViewModel : BindableBase
     {
         #region Members
-        private readonly IEventAggregator _eventAggregator;
-        private readonly IMenuService _menuService;
         private DragDropItem _dragDropItem;
         #endregion
 
@@ -116,6 +111,8 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
             set => SetProperty<bool>(ref _isDown, value);
         }
 
+        public bool IsDragging { get; set; }
+
         public Point StartPoint { get; set; }
 
         public UIElement OriginalElement { get; set; }
@@ -127,24 +124,24 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
         public void ExecuteMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             System.Windows.Controls.Canvas canvas=null;
+            FindDownCanvas();
 
-            if (sender is FrameworkElement element)
+            void FindDownCanvas()
             {
-                VisualTreeFinder visualTreeFinder = new();
+                if (sender is FrameworkElement element)
+                {
+                    VisualTreeFinder visualTreeFinder = new();
 
-                var itemsControl = visualTreeFinder.FindVisualParent<ItemsControl>(element);
+                    var itemsControl = visualTreeFinder.FindVisualParent<ItemsControl>(element);
 
-                var childs = visualTreeFinder.FindVisualChilds<System.Windows.DependencyObject>(itemsControl);
-                canvas = childs.FirstOrDefault(d => d is System.Windows.Controls.Canvas) as System.Windows.Controls.Canvas;
+                    var childs = visualTreeFinder.FindVisualChilds<System.Windows.DependencyObject>(itemsControl);
+                    canvas = childs.FirstOrDefault(d => d is System.Windows.Controls.Canvas) as System.Windows.Controls.Canvas;
+                }
             }
 
             IsDown = true;
-            //StartPoint = e.GetPosition((IInputElement)e.Source);
             StartPoint = e.GetPosition(canvas);
-            //X= StartPoint.X; Y= StartPoint.Y;
             OriginalElement = e.Source as UIElement;
-        //   (sender as FrameworkElement).CaptureMouse();
-
             canvas?.CaptureMouse();
             e.Handled = true;
 

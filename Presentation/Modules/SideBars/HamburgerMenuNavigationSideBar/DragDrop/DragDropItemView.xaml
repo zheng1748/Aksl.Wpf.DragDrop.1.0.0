@@ -12,13 +12,11 @@
         <ei:EventTrigger EventName="MouseLeftButtonDown"
                          SourceObject="{Binding ElementName=dragDropItemView}">
             <ei:CallMethodAction TargetObject="{Binding}"
-                                 MethodName="ExecuteMouseLeftButtonDown"/>
-            <!--<ei:ChangePropertyAction TargetObject="{Binding Path=DataContext,RelativeSource={RelativeSource Mode=FindAncestor,AncestorType={x:Type UserControl}}}"
-                                     PropertyName="IsSelected"
-                                     Value="True" />-->
+                                 MethodName="ExecuteMouseLeftButtonDown" />
         </ei:EventTrigger>
     </ei:Interaction.Triggers>
     <UserControl.Resources>
+        
         <Style x:Key="contentControlStyle"
                TargetType="{x:Type ContentControl}">
             <Setter Property="Margin"

@@ -34,7 +34,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
 
         public MenuContentViewModel MenuContent { get; private set; }
 
-        // public MenuItemViewModel SelectedMenuItem { get; private set; }
         private MenuItemViewModel _selectedMenuItem;
         public MenuItemViewModel SelectedMenuItem
         {

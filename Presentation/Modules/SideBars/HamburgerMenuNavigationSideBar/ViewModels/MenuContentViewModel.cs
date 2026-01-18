@@ -107,21 +107,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
             foreach (var menuItem in _leafMenuItems)
             {
                 MenuItemViewModel menuItemViewModel = new(_eventAggregator, GroupIndex, index++, menuItem);
-                //AddPropertyChanged(menuItemViewModel);
-
-                //void AddPropertyChanged(MenuItemViewModel menuItemvm)
-                //{
-                //    menuItemvm.PropertyChanged += (sender, e) =>
-                //    {
-                //        if (sender is MenuItemViewModel mivm)
-                //        {
-                //            if (e.PropertyName == nameof(MenuItemViewModel.IsSelected))
-                //            {
-                //                SelectedMenuItem = mivm;
-                //            }
-                //        }
-                //    };
-                //}
 
                 MenuItems.Add(menuItemViewModel);
             }

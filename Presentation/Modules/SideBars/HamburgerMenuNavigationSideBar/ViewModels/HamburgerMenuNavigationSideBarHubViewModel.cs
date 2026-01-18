@@ -47,23 +47,12 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
             IsPaneOpen = true;
             SelectedPlacement = SplitViewPanePlacement.Left;
 
-            _workspaceViewEventName = "OnBuildHamburgerMenuNavigationSideBarWorkspaceViewEvent";
-            WorkspaceRegionName ="HamburgerNavigationSideBarWorkspaceRegion";
-
-            RegisterBuildWorkspaceViewEvents();
             RegisterHamburgerMenuBarPaneOpenEvent();
         }
         #endregion
 
         #region Properties
         public GroupedMenusViewModel NavigationSideBar { get; private set; }
-
-        private string _workspaceRegionName;
-        public string WorkspaceRegionName
-        {
-            get => _workspaceRegionName;
-            set => SetProperty<string>(ref _workspaceRegionName, value);
-        }
 
         private bool _isLoading;
         public bool IsLoading
@@ -220,149 +209,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
         }
         #endregion
 
-        #region Register BuildWorkspaceView Event
-        //private object _activeView = default;
-        //private static bool isSignIning = false;
-        private void RegisterBuildWorkspaceViewEvents()
-        {
-            var buildHWorkspaceViewEvent = _eventAggregator.GetEvent(_workspaceViewEventName) as OnBuildWorkspaceViewEventbase;
-            Debug.Assert(buildHWorkspaceViewEvent is not null);
-
-           // _eventAggregator.GetEvent<OnBuildHamburgerMenuNavigationSideBarWorkspaceViewEvent>().Subscribe(async (bhmnsbwve) =>
-             buildHWorkspaceViewEvent.Subscribe(async (bmve) =>
-             {
-                var currentMenuItem = bmve.CurrentMenuItem;
-
-                try
-                {
-                     var previewSelectedMenuItem = NavigationSideBar.PreviewSelectedMenuItem;
-                     var selectedMenuItem = NavigationSideBar.SelectedMenuItem;
-
-                     //if (currentMenuItem.RequrePermissons is not null)
-                     //{
-                     //    isSignIning = true;
-
-                     //    NavigatedToLoginView();
-                     //}
-                     //else
-                     //{
-                     //    if (isSignIning)
-                     //    {
-                     //        isSignIning = false;
-                     //        // await LoadViewAsync();
-                     //    }
-                     //    else
-                     //    {
-                     //await LoadViewAsync(currentMenuItem);
-                     //    }
-                     //}
-                     await LoadViewAsync();
-
-                     #region LoadView Method
-                     async Task LoadViewAsync()
-                     {
-                         string viewTypeAssemblyQualifiedName = currentMenuItem.ViewName;
-                         Type viewType = Type.GetType(viewTypeAssemblyQualifiedName);
-                         if (viewType is not null)
-                         {
-                             IRegion region = _regionManager.Regions[WorkspaceRegionName];
-                             var viewName = viewType.Name;
-
-                             //_currentView = region.GetView(viewTypeAssemblyQualifiedName);
-                             _currentView = region.Views.FirstOrDefault(v => v.GetType() == viewType);
-                             if (_currentView is null)
-                             {
-                                 _currentView = region.GetView(viewType.FullName);
-                             }
-
-                             if (_currentView is not null)
-                             {
-                                 if (currentMenuItem.IsCacheable)
-                                 {
-                                     region.Activate(_currentView);
-                                 }
-                                 else
-                                 {
-                                     region.Remove(_currentView);
-
-                                     AddView();
-                                 }
-                             }
-                             else
-                             {
-                                 AddView();
-                             }
-
-                             void AddView()
-                             {
-                                 if (CanAddView())
-                                 {
-                                     NavigationParameters navigationParameters = new()
-                                    {
-                                        { "CurrentMenuItem", currentMenuItem }
-                                    };
-
-                                     _regionManager.RequestNavigate(WorkspaceRegionName, viewName, navigationParameters);
-                                 }
-                             }
-
-                             bool CanAddView() => !string.IsNullOrEmpty(currentMenuItem.ModuleName);
-                         }
-                         else
-                         {
-                             await _dialogViewService.AlertAsync(message: $"Unable to find \"{viewTypeAssemblyQualifiedName}\".", title: $"Error:Missing Type");
-                         }
-                     }
-                     #endregion
-
-                     #region Navigated To LoginView Method
-                     //void NavigatedToLoginView()
-                     //{
-                     //    var contentRegion = _regionManager.Regions[RegionNames.ShellContentRegion];
-                     //    var activeViews = contentRegion.ActiveViews;
-                     //    if (activeViews is not null && activeViews.Any())
-                     //    {
-                     //        _activeView = activeViews.FirstOrDefault();
-                     //    }
-
-                     //    var viewName = GetViewName();
-
-                     //    var loginViewName = "LoginView";
-                     //    (string ViewName, Infrastructure.MenuItem CurrentMenuItem, string LoginViewName, object ActiveView, object SelectedMenuItem, object PreviewSelectedMenuItem) parameters = (viewName, currentMenuItem, loginViewName, _activeView, selectedMenuItem, previewSelectedMenuItem);
-
-                     //    NavigationParameters navigationParameters = new()
-                     //    {
-                     //       {NavigationParameterNames.NavToSignIn,parameters},
-                     //    };
-
-                     //    _regionManager.RequestNavigate(RegionNames.ShellContentRegion, loginViewName, navigationParameters);
-                     //}
-                     #endregion
-
-                     #region GetViewName Method
-                     //string GetViewName()
-                     //{
-                     //    string viewName = default;
-
-                     //    string viewTypeAssemblyQualifiedName = currentMenuItem.ViewName;
-                     //    Type viewType = Type.GetType(viewTypeAssemblyQualifiedName);
-                     //    if (viewType is not null)
-                     //    {
-                     //        viewName = viewType.Name;
-                     //    }
-
-                     //    return viewName;
-                     //}
-                     #endregion
-                 }
-                 catch (Exception ex)
-                {
-                    await _dialogViewService.AlertAsync(message: $"Unable to loading \"{currentMenuItem.ModuleName}\" module.: \"{ex.Message}\"", title: "Error: Load Module");
-                }
-            }, ThreadOption.UIThread, true);
-        }
-        #endregion
-
         #region Register HamburgerMenuBarPaneOpen Event
         private void RegisterHamburgerMenuBarPaneOpenEvent()
         {
@@ -428,43 +274,7 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
             var parameters = navigationContext.Parameters;
             if (parameters is not null)
             {
-                if (parameters.Count == 0)
-                {
-                    CreateGroupedMenusViewModelAsync().GetAwaiter().GetResult();
-                }
-                //else
-                //{
-                //    if (isSignIning && parameters.TryGetValue(NavigationParameterNames.NavBackFromSignIn, out object navFromParameter))
-                //    {
-                //        (string UserName, bool IsSuccessful, Infrastructure.MenuItem CurrentMenuItem, object SelectedMenuItem, object PreviewSelectedMenuItem) fromParameter = ((string, bool, Infrastructure.MenuItem, object, object))navFromParameter;
-                //        if (!fromParameter.IsSuccessful)
-                //        {
-                //            isSignIning = false;
-
-                //            if (fromParameter.PreviewSelectedMenuItem is not null)
-                //            {
-                //                var contentRegion = _regionManager.Regions[RegionNames.ShellContentRegion];
-                //                var activeViews = contentRegion.Views;
-                //                var count = activeViews.Count();
-
-                //                //NavigationSideBar.SelectedMenuItem= fromParameter.PreviewSelectedMenuItem as MenuItemViewModel;
-
-                //               var selectedMenuItem = fromParameter.PreviewSelectedMenuItem as MenuItemViewModel;
-                //                NavigationSideBar.ResetSelectedMenuItem(selectedMenuItem);
-                //            }
-                //            else
-                //            {
-                //               // NavigationSideBar.SelectedMenuItem = null;
-                //                NavigationSideBar.ClearSelectedMenuItem();
-                //            }
-                //        }
-                //        else if (fromParameter.IsSuccessful)
-                //        {
-                //            isSignIning = false;
-                //            await LoadViewAsync(fromParameter.CurrentMenuItem);
-                //        }
-                //    }
-                //}
+                CreateGroupedMenusViewModelAsync().GetAwaiter().GetResult();
             }
         }
 

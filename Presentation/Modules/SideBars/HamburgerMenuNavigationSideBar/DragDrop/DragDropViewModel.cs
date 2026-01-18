@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Xml.Linq;
-using Aksl.Toolkit.UI;
-using Prism.Events;
+
 using Prism.Mvvm;
-using Unity;
+
+using Aksl.Toolkit.UI;
 
 namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
 {
@@ -18,13 +16,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
     {
         #region Members
         private DragDropItemViewModel _selectedDragDropItem;
-        private bool _isDown;
-        private bool _isDragging;
-        private UIElement _originalElement;
-        private double _originalLeft;
-        private double _originalTop;
-        private SimpleCircleAdorner _overlayElement;
-        private Point _startPoint;
         #endregion
 
         #region Constructors
@@ -73,10 +64,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
 
                                     _selectedDragDropItem = ddivm;
                                 }
-
-                                _isDown = _selectedDragDropItem.IsDown;
-                                _startPoint = _selectedDragDropItem.StartPoint;
-                                _originalElement = _selectedDragDropItem.OriginalElement;
                             }
                             else
                             {
@@ -91,48 +78,7 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
         }
         #endregion
 
-        #region Methods
-        public System.Windows.DependencyObject GetStoreViewElement(Type viewType)
-        {
-            var storeDragDropItemViewModel = DragDropItems.FirstOrDefault(ti => ti.ViewElementType == viewType);
-
-            return storeDragDropItemViewModel?.ViewElement;
-        }
-        #endregion
-
-        #region MouseLeftButtonDown Event
-        public void ExecutePreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.Source is ItemsControl element)
-            {
-
-                VisualTreeFinder visualTreeFinder = new();
-
-                var childs = visualTreeFinder.FindVisualChilds<System.Windows.DependencyObject>(element);
-                var canvas = childs.FirstOrDefault(d => d is System.Windows.Controls.Canvas);
-
-                //Type viewType = elementView.GetType();
-                //var currentView = GetStoreViewElement(viewType);
-
-                //if (elementView is not elementView)
-                //{
-
-                //}
-
-                _isDown = true;
-                _startPoint = e.GetPosition((IInputElement)e.Source);
-                _originalElement = e.Source as UIElement;
-                // MyCanvas.CaptureMouse();
-                e.Handled = true;
-            }
-            else
-            {
-
-            }
-
-        }
-        #endregion
-
+        #region MouseMove Event
         public void ExecutePreviewMouseMove(object sender, MouseEventArgs e)
         {
             if ((_selectedDragDropItem is not null) && _selectedDragDropItem.IsDown)
@@ -145,16 +91,13 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
 
                     var childs = visualTreeFinder.FindVisualChilds<System.Windows.DependencyObject>(element);
                     canvas = childs.FirstOrDefault(d => d is System.Windows.Controls.Canvas) as System.Windows.Controls.Canvas;
-
-
-                    //if ((_isDragging == false) && ((Math.Abs(e.GetPosition(canvas).X - _selectedDragDropItem.StartPoint.X) > SystemParameters.MinimumHorizontalDragDistance) ||
-                    //                              (Math.Abs(e.GetPosition(canvas).Y - _selectedDragDropItem.StartPoint.Y) > SystemParameters.MinimumVerticalDragDistance)))
-                    if (_isDragging == false)
+                  
+                    if (!_selectedDragDropItem.IsDragging)
                     {
                         DragStarted();
                     }
 
-                    if (_isDragging)
+                    if (_selectedDragDropItem.IsDragging)
                     {
                         DragMoved();
                     }
@@ -162,43 +105,28 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
 
                 void DragStarted()
                 {
-                    _isDragging = true;
+                    _selectedDragDropItem.IsDragging = true;
 
-                    // var originalElement = _selectedDragDropItem.ViewElement as UIElement;
                     var originalElement = _selectedDragDropItem.OriginalElement;
-
-                    //_originalLeft = Canvas.GetLeft(originalElement);
-                    //_originalTop = Canvas.GetTop(originalElement);
-                    //_originalLeft = Canvas.GetLeft(_originalElement);
-                    //_originalTop = Canvas.GetTop(_originalElement);
 
                     var overlayElement = new SimpleCircleAdorner(originalElement);
                     _selectedDragDropItem.OverlayElement = overlayElement;
                     var layer = AdornerLayer.GetAdornerLayer(originalElement);
                     layer.Add(overlayElement);
-
-                    //  _overlayElement = new SimpleCircleAdorner(originalElement);
-                    //var layer = AdornerLayer.GetAdornerLayer(originalElement);
-                    //layer.Add(_overlayElement);
                 }
 
                 void DragMoved()
                 {
                     var currentPosition = Mouse.GetPosition(canvas);
 
-                    //_selectedDragDropItem.OverlayElement.LeftOffset = currentPosition.X - _selectedDragDropItem.X;
-                    //_selectedDragDropItem.OverlayElement.TopOffset = currentPosition.Y - _selectedDragDropItem.Y;
                     _selectedDragDropItem.OverlayElement.LeftOffset = currentPosition.X - _selectedDragDropItem.StartPoint.X;
                     _selectedDragDropItem.OverlayElement.TopOffset = currentPosition.Y - _selectedDragDropItem.StartPoint.Y;
-                    //_selectedDragDropItem.OverlayElement.LeftOffset = currentPosition.X - _startPoint.X;
-                    //_selectedDragDropItem.OverlayElement.TopOffset = currentPosition.Y - _startPoint.Y;
-
-                    //_overlayElement.LeftOffset = currentPosition.X - _startPoint.X;
-                    //_overlayElement.TopOffset = currentPosition.Y - _startPoint.Y;
                 }
             }
         }
+        #endregion
 
+        #region MouseLeftButtonUp Event
         public void ExecutePreviewMouseLeftButtonUp(object sender, MouseEventArgs e)
         {
             if ((_selectedDragDropItem is not null) && _selectedDragDropItem.IsDown)
@@ -222,7 +150,7 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
             {
                 Mouse.Capture(null);
 
-                if (_isDragging)
+                if (_selectedDragDropItem.IsDragging)
                 {
                     var overlayElement = _selectedDragDropItem.OverlayElement;
                     AdornerLayer.GetAdornerLayer(overlayElement.AdornedElement).Remove(overlayElement);
@@ -230,26 +158,12 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
                     _selectedDragDropItem.X = _selectedDragDropItem.X + _selectedDragDropItem.OverlayElement.LeftOffset;
                     _selectedDragDropItem.Y = _selectedDragDropItem.Y +_selectedDragDropItem.OverlayElement.TopOffset;
 
-                    //  var currentPosition = Mouse.GetPosition(sender as FrameworkElement);
-
-                    //_selectedDragDropItem.X = currentPosition.X ;
-                    //_selectedDragDropItem.Y = currentPosition.Y ;
-
-                    //_selectedDragDropItem.X = currentPosition.X - _selectedDragDropItem.OverlayElement.LeftOffset;
-                    //_selectedDragDropItem.Y = currentPosition.Y - _selectedDragDropItem.OverlayElement.TopOffset;
-
-                    //if (cancelled == false)
-                    //{
-                    //    Canvas.SetTop(_originalElement, _originalTop + _overlayElement.TopOffset);
-                    //    Canvas.SetLeft(_originalElement, _originalLeft + _overlayElement.LeftOffset);
-                    //}
-                    //_overlayElement = null;
                     _selectedDragDropItem.OverlayElement = null;
                 }
-                _isDragging = false;
-                //  _isDown = false;
+                _selectedDragDropItem.IsDragging = false;
                 _selectedDragDropItem.IsDown = false;
             }
         }
+        #endregion
     }
 }

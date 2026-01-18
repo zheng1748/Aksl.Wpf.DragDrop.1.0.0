@@ -42,11 +42,6 @@
                 <ei:CallMethodAction TargetObject="{Binding}"
                                      MethodName="ExecuteDrop" />
             </ei:EventTrigger>
-            <!--<ei:EventTrigger EventName="PreviewMouseLeftButtonDown"
-                             SourceObject="{Binding ElementName=dragDropItemsContro}">
-                <ei:CallMethodAction TargetObject="{Binding}"
-                                     MethodName="ExecutePreviewMouseLeftButtonDown" />
-            </ei:EventTrigger>-->
             <ei:EventTrigger EventName="PreviewMouseMove"
                              SourceObject="{Binding ElementName=dragDropItemsControl}">
                 <ei:CallMethodAction TargetObject="{Binding}"

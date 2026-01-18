@@ -25,7 +25,6 @@ using Aksl.Toolkit.Services;
 using Aksl.Infrastructure;
 using Aksl.Infrastructure.Events;
 
-using Aksl.Modules.Home;
 using Aksl.Modules.Shell;
 using Aksl.Modules.Shell.ViewModels;
 using Aksl.Modules.Shell.Views;
@@ -34,11 +33,9 @@ using Aksl.Modules.HamburgerMenuNavigationSideBar;
 
 using Aksl.Modules.Account;
 
-using Aksl.Modules.Pipeline;
-using Aksl.Modules.Thermometer;
-using Aksl.Modules.CoolingTower;
-using Aksl.Modules.AirCompresser;
-using Aksl.Modules.Miscs;
+using Aksl.Modules.Yellows;
+using Aksl.Modules.Blues;
+using Aksl.Modules.Blacks;
 
 namespace Aksl.Wpf.Unity
 {
@@ -88,11 +85,6 @@ namespace Aksl.Wpf.Unity
             });
             #endregion
 
-            #region WorkspaceViewEventNameAttribute 
-            // var types = Assembly.GetExecutingAssembly().GetTypes().Where(type => type.GetCustomAttributes<WorkspaceViewEventNameAttribute>().Any());
-            //var workspaceViewEventName = typeof(EventBase).GetCustomAttributeValue<WorkspaceViewEventNameAttribute, string>(w => w.WorkspaceViewEventName, "OnBuildHamburgerMenuWorkspaceViewEvent");
-            #endregion
-
             var serviceProvider = services.BuildServiceProvider();
 
             containerRegistry.RegisterInstance<IServiceProvider>(serviceProvider);
@@ -112,12 +104,9 @@ namespace Aksl.Wpf.Unity
             try
             {
                 MenuService menuService = new(new List<string> {"pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/AllMenus.xml",
-                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Industry.xml",
-                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Pipelines.xml",
-                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Thermometers.xml",
-                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/CoolingTowers.xml",
-                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/AirCompressers.xml",
-                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Miscs.xml"
+                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Blacks.xml",
+                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Blues.xml",
+                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Yellows.xml",
                                                                 });
 
                 await menuService.CreateMenusAsync();
@@ -140,10 +129,6 @@ namespace Aksl.Wpf.Unity
                 _ = eventAggregator.GetEvent<OnBuildHamburgerMenuSideBarWorkspaceViewEvent>();
                 _ = eventAggregator.GetEvent<OnBuildHamburgerMenuNavigationSideBarWorkspaceViewEvent>();
                 _ = eventAggregator.GetEvent<OnBuildHamburgerMenuTreeSideBarWorkspaceViewEvent>();
-
-                _ = eventAggregator.GetEvent<OnBuildHamburgerMenuSideBarTabWorkspaceViewEvent>();
-                _ = eventAggregator.GetEvent<OnBuildHamburgerMenuNavigationSideBarTabWorkspaceViewEvent>();
-                _ = eventAggregator.GetEvent<OnBuildHamburgerMenuTreeSideBarTabWorkspaceViewEvent>();
             }
             catch (Exception ex)
             {
@@ -156,19 +141,13 @@ namespace Aksl.Wpf.Unity
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            _ = moduleCatalog.AddModule(nameof(HomeModule), typeof(HomeModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
-
             _ = moduleCatalog.AddModule(nameof(AccountModule), typeof(AccountModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
 
-            _ = moduleCatalog.AddModule(nameof(PipelineModule), typeof(PipelineModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
-            _ = moduleCatalog.AddModule(nameof(ThermometerModule), typeof(ThermometerModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
-            _ = moduleCatalog.AddModule(nameof(CoolingTowerModule), typeof(CoolingTowerModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
-            _ = moduleCatalog.AddModule(nameof(AirCompresserModule), typeof(AirCompresserModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
-
-            _ = moduleCatalog.AddModule(nameof(MiscsModule), typeof(MiscsModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
+            _ = moduleCatalog.AddModule(nameof(BlacksModule), typeof(BlacksModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
+            _ = moduleCatalog.AddModule(nameof(BluesModule), typeof(BluesModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
+            _ = moduleCatalog.AddModule(nameof(YellowsModule), typeof(YellowsModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
 
             _ = moduleCatalog.AddModule(typeof(HamburgerMenuNavigationSideBarModule).Name, typeof(HamburgerMenuNavigationSideBarModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
-
             _ = moduleCatalog.AddModule(typeof(ShellModule).Name, typeof(ShellModule).AssemblyQualifiedName, InitializationMode.WhenAvailable, typeof(HamburgerMenuNavigationSideBarModule).Name);
         }
 

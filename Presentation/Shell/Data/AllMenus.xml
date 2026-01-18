@@ -4,38 +4,37 @@
 		  Name="All"
 		  Level="0" >
 	<MenuItem Id="1"
-			  Name="Home"
-			  Title="主页"
+			  Name="BlacksManager"
+			  Title="Blacks"
 			  Level="1"
 			  IsHome="True"
-			  IsSelectedOnInitialize="True"
-			  IconKind="Home"
+			  IconKind="Blackboard"
 			  ItemType="Item"
-			  ModuleName="HomeModule"
-			  ViewName="Aksl.Modules.Home.Views.HomeView,Aksl.Modules.Home"
-		      Width="100"
-		      Height="100">
+			  ModuleName=""
+			  ViewName=""
+		      IsNextNavigation="True"
+			  NavigationName="Blacks">
 	</MenuItem>
-	<MenuItem Id="0"
-			  Name="IndustryManager"
-			  Title="Industry"
+	<MenuItem Id="1"
+			  Name="BluesManager"
+			  Title="Blues"
 			  Level="1"
-			  IconKind="Draw"
+			  IconKind="PhoneBluetooth"
 			  ItemType="Item"
 			  IsCacheable="True"
 			  ModuleName=""
 			  IsNextNavigation="True"
-			  NavigationName="Industry">
+			  NavigationName="Blues">
 	</MenuItem>
-	<MenuItem Id="0"
-			  Name="MiscsManager"
-			  Title="Miscs"
+	<MenuItem Id="2"
+			  Name="YellowsManager"
+			  Title="Yellows"
 			  Level="1"
-			  IconKind="Draw"
+			  IconKind="SignYield"
 			  ItemType="Item"
 			  IsCacheable="True"
 			  ModuleName=""
 			  IsNextNavigation="True"
-			  NavigationName="Miscs">
+			  NavigationName="Yellows">
 	</MenuItem>
 </MenuItem>

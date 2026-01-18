@@ -244,6 +244,7 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
                     //    Canvas.SetLeft(_originalElement, _originalLeft + _overlayElement.LeftOffset);
                     //}
                     //_overlayElement = null;
+                    _selectedDragDropItem.OverlayElement = null;
                 }
                 _isDragging = false;
                 //  _isDown = false;

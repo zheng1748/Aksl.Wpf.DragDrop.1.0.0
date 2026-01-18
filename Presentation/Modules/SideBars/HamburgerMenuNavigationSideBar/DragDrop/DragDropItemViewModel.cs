@@ -123,7 +123,6 @@ namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
         public SimpleCircleAdorner OverlayElement { get; set; }
         #endregion
 
-
         #region MouseLeftButtonDown Event
         public void ExecuteMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

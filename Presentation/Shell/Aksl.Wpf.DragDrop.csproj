@@ -19,13 +19,10 @@
 
   <ItemGroup>
     <None Remove="Configuration\appsettings.json" />
-    <None Remove="Data\AirCompressers.xml" />
     <None Remove="Data\AllMenus.xml" />
-    <None Remove="Data\CoolingTowers.xml" />
-    <None Remove="Data\Industry.xml" />
-    <None Remove="Data\Miscs.xml" />
-    <None Remove="Data\Pipelines.xml" />
-    <None Remove="Data\Thermometers.xml" />
+    <None Remove="Data\Blacks.xml" />
+    <None Remove="Data\Blues.xml" />
+    <None Remove="Data\Yellows.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -35,25 +32,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Data\AirCompressers.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
     <Resource Include="Data\AllMenus.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\CoolingTowers.xml">
+    <Resource Include="Data\Blacks.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\Miscs.xml">
+    <Resource Include="Data\Yellows.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
-    <Resource Include="Data\Industry.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Data\Pipelines.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Resource>
-    <Resource Include="Data\Thermometers.xml">
+    <Resource Include="Data\Blues.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
@@ -107,12 +95,9 @@
     <ProjectReference Include="..\..\Toolkits\Prism Library\Prism.Unity.Wpf\Prism.Unity.Wpf.csproj" />
     <ProjectReference Include="..\..\Toolkits\Prism Library\Prism.Wpf\Prism.Wpf.csproj" />
     <ProjectReference Include="..\Modules\Account\Account.csproj" />
-    <ProjectReference Include="..\Modules\HomeView\HomeView.csproj" />
-    <ProjectReference Include="..\Modules\Industry\AirCompresserView\AirCompresserView.csproj" />
-    <ProjectReference Include="..\Modules\Industry\CoolingTowerView\CoolingTowerView.csproj" />
-    <ProjectReference Include="..\Modules\Industry\PipelineView\PipelineView.csproj" />
-    <ProjectReference Include="..\Modules\Industry\ThermometerrView\ThermometerView.csproj" />
-    <ProjectReference Include="..\Modules\Miscs\MiscsView\MiscsView.csproj" />
+    <ProjectReference Include="..\Modules\Colors\BlacksView\BlacksView.csproj" />
+    <ProjectReference Include="..\Modules\Colors\BluesView\BluesView.csproj" />
+    <ProjectReference Include="..\Modules\Colors\YellowsView\YellowsView.csproj" />
     <ProjectReference Include="..\Modules\SideBars\HamburgerMenuNavigationSideBar\HamburgerMenuNavigationSideBar.csproj" />
   </ItemGroup>
 

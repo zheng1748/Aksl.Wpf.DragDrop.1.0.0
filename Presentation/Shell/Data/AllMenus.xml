@@ -37,4 +37,15 @@
 			  IsNextNavigation="True"
 			  NavigationName="Yellows">
 	</MenuItem>
+	<MenuItem Id="2"
+			  Name="RedsManager"
+			  Title="Reds"
+			  Level="1"
+			  IconKind="AccountArrowDown"
+			  ItemType="Item"
+			  IsCacheable="True"
+			  ModuleName=""
+			  IsNextNavigation="True"
+			  NavigationName="Reds">
+	</MenuItem>
 </MenuItem>

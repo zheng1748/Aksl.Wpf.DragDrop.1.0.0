@@ -36,12 +36,10 @@ using Aksl.Modules.Account;
 using Aksl.Modules.Yellows;
 using Aksl.Modules.Blues;
 using Aksl.Modules.Blacks;
+using Aksl.Modules.Reds;
 
 namespace Aksl.Wpf.Unity
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App
     {
         protected override void ConfigureViewModelLocator()
@@ -53,45 +51,8 @@ namespace Aksl.Wpf.Unity
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            #region Initialize
-            var services = new ServiceCollection();
-            services.AddOptions();
-
-            string basePath = Directory.GetCurrentDirectory();
-            string configPath = Path.Combine(basePath, "Configuration");
-            string appSettingsPath = Path.Combine(configPath, "appsettings.json");
-            IConfigurationBuilder configurationBuilder = new ConfigurationBuilder().SetBasePath(basePath)
-                                                                                   .AddJsonFile(path: appSettingsPath, optional: true, reloadOnChange: false);
-
-            var configuration = configurationBuilder.Build();
-            #endregion
-
-            #region Logging
-            services.AddLogging(builder =>
-            {
-                var loggingSection = configuration.GetSection("Logging");
-                var includeScopes = loggingSection.GetValue<bool>("IncludeScopes");
-
-                builder.AddConfiguration(loggingSection);
-
-                //加入一个ConsoleLoggerProvider
-                //builder.AddConsole(consoleLoggerOptions =>
-                //{
-                //    consoleLoggerOptions.IncludeScopes = includeScopes;
-                //});
-
-                //加入一个DebugLoggerProvider
-                builder.AddDebug();
-            });
-            #endregion
-
-            var serviceProvider = services.BuildServiceProvider();
-
-            containerRegistry.RegisterInstance<IServiceProvider>(serviceProvider);
-
             containerRegistry.RegisterSingleton(typeof(IDialogService), typeof(DialogService));
             containerRegistry.RegisterSingleton(typeof(IDialogViewService), typeof(DialogViewService));
-
             containerRegistry.RegisterDialog<ConfirmView, ConfirmViewModel>();
 
             RegisterMenuFactoryAsync(containerRegistry).GetAwaiter().GetResult();
@@ -107,6 +68,7 @@ namespace Aksl.Wpf.Unity
                                                                 "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Blacks.xml",
                                                                 "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Blues.xml",
                                                                 "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Yellows.xml",
+                                                                "pack://application:,,,/Aksl.Wpf.DragDrop;Component/Data/Reds.xml",    
                                                                 });
 
                 await menuService.CreateMenusAsync();
@@ -124,11 +86,6 @@ namespace Aksl.Wpf.Unity
             try
             {
                 var eventAggregator = Container.Resolve<IEventAggregator>();
-
-                //SideBar
-                //_ = eventAggregator.GetEvent<OnBuildHamburgerMenuSideBarWorkspaceViewEvent>();
-                _ = eventAggregator.GetEvent<OnBuildHamburgerMenuNavigationSideBarWorkspaceViewEvent>();
-                //_ = eventAggregator.GetEvent<OnBuildHamburgerMenuTreeSideBarWorkspaceViewEvent>();
             }
             catch (Exception ex)
             {
@@ -146,6 +103,7 @@ namespace Aksl.Wpf.Unity
             _ = moduleCatalog.AddModule(nameof(BlacksModule), typeof(BlacksModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
             _ = moduleCatalog.AddModule(nameof(BluesModule), typeof(BluesModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
             _ = moduleCatalog.AddModule(nameof(YellowsModule), typeof(YellowsModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
+            _ = moduleCatalog.AddModule(nameof(RedsModule), typeof(RedsModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
 
             _ = moduleCatalog.AddModule(typeof(HamburgerMenuNavigationSideBarModule).Name, typeof(HamburgerMenuNavigationSideBarModule).AssemblyQualifiedName, InitializationMode.WhenAvailable);
             _ = moduleCatalog.AddModule(typeof(ShellModule).Name, typeof(ShellModule).AssemblyQualifiedName, InitializationMode.WhenAvailable, typeof(HamburgerMenuNavigationSideBarModule).Name);

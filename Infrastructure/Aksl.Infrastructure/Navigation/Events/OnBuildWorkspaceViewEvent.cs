@@ -20,36 +20,4 @@ namespace Aksl.Infrastructure.Events
         #endregion
     }
     #endregion
-
-    #region SideBar
-    public class OnBuildHamburgerMenuSideBarWorkspaceViewEvent : OnBuildWorkspaceViewEventbase
-    {
-        #region Constructors
-        public OnBuildHamburgerMenuSideBarWorkspaceViewEvent()
-        {
-            Name = typeof(OnBuildHamburgerMenuSideBarWorkspaceViewEvent).Name;
-        }
-        #endregion
-    }
-
-    public class OnBuildHamburgerMenuNavigationSideBarWorkspaceViewEvent : OnBuildWorkspaceViewEventbase
-    {
-        #region Constructors
-        public OnBuildHamburgerMenuNavigationSideBarWorkspaceViewEvent()
-        {
-            Name = typeof(OnBuildHamburgerMenuNavigationSideBarWorkspaceViewEvent).Name;
-        }
-        #endregion
-    }
-
-    public class OnBuildHamburgerMenuTreeSideBarWorkspaceViewEvent : OnBuildWorkspaceViewEventbase
-    {
-        #region Constructors
-        public OnBuildHamburgerMenuTreeSideBarWorkspaceViewEvent()
-        {
-            Name = typeof(OnBuildHamburgerMenuTreeSideBarWorkspaceViewEvent).Name;
-        }
-        #endregion
-    }
-    #endregion
 }

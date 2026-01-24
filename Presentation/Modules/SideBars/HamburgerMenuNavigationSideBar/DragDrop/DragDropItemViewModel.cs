@@ -1,15 +1,13 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
 using Prism;
-using Prism.Events;
 using Prism.Mvvm;
 using Prism.Unity;
-using System;
-using System.Linq;
 
-using Aksl.Infrastructure;
 using Aksl.Toolkit.UI;
 
 namespace Aksl.Modules.HamburgerMenuNavigationSideBar.ViewModels
